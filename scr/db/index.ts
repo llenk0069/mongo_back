@@ -1,11 +1,17 @@
 require('dotenv').config('../../.env')
-import { MongoClient } from 'mongodb'
+import { Db, MongoClient } from 'mongodb'
 
-export const Db_client = async ()=>{
-    try{
-        if(!process.env.db_uri){return}
-        const client = new MongoClient(process.env.db_uri)
-        await client.connect()
-        return client
-    }catch(e){}
-}
+
+let dbConnection:Db
+export const connectToDB = (callback:(...e:any)=>Promise<void>)=>{
+    const uri = process.env.db_uri as string
+    MongoClient
+        .connect(uri)
+        .then(client=>{
+            console.log("Connected to Mongo")
+            dbConnection= client.db('Proj666')
+            callback()
+        })
+        .catch()}
+export const getDB = ()=>dbConnection
+
