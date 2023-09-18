@@ -1,7 +1,7 @@
 require('dotenv').config('../../.env')
 import { Db, MongoClient } from 'mongodb'
 
-
+let i = "TTTT"
 let dbConnection:Db
 export const connectToDB = (callback:(...e:any)=>Promise<void>)=>{
     const uri = process.env.db_uri as string
@@ -14,4 +14,5 @@ export const connectToDB = (callback:(...e:any)=>Promise<void>)=>{
         })
         .catch()}
 export const getDB = ()=>dbConnection
+export const getDB2 = ()=>i
 
