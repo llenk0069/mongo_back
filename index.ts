@@ -1,23 +1,27 @@
 import express from 'express'
-import { MongoClient } from 'mongodb'
 require('dotenv').config()
-// const { connectToDB, getDB } = require('./scr/db')
-import { connectToDB, getDB } from './scr/db'
-import tokenServices from './scr/services/token-services'
+import { connectToDB} from './scr/db'
 import TokensRouter from './scr/routers/token-router'
+import mongoose from 'mongoose'
 
 const PORT = process.env.PORT
+const uri = process.env.db_uri as string
+mongoose.connect(uri)
+    .then(()=>console.log('connected to MongoDB'))
+    .catch((e)=>console.log(`connect error ${e}`))
 
 const app = express() 
 app.use(TokensRouter)
-connectToDB(async (err:Error)=>{
-    if(!err){
-        app.listen(PORT, async ()=>{
-            console.log(`PORT: ${PORT}`)
-        })
-        // tokenServices.getAllTokens()
-    } else{
-        console.log(`DB connection Failed ${err}`)
-    }
-})
+
+
+// connectToDB(async (err:Error)=>{
+//     if(!err){
+//         app.listen(PORT, async ()=>{
+//             console.log(`PORT: ${PORT}`)
+//         })
+//         // tokenServices.getAllTokens()
+//     } else{
+//         console.log(`DB connection Failed ${err}`)
+//     }
+// })
 
