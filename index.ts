@@ -1,11 +1,7 @@
 import express from 'express'
 require('dotenv').config()
-
-import TokensRouter from './scr/routers/token-router'
 import mongoose from 'mongoose'
-import { Movie } from './scr/db/models/movie'
-import { token } from './scr/db/models/token'
-import UserRouter from './scr/routers/user-router'
+import MainRouter from './scr/routers/main-router'
 
 const PORT = process.env.PORT
 const uri = process.env.db_uri as string
@@ -15,9 +11,9 @@ mongoose.connect(uri)
     .catch((e)=>console.log(`connect error ${e}`))
 
     
-const app = express() 
-app.use(TokensRouter)
-app.use(UserRouter)
+const app = express()
+
+app.use(MainRouter)
 app.listen(PORT, async ()=>{
     console.log(`PORT: ${PORT}`)
 })

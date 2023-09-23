@@ -7,8 +7,7 @@ export const TokenControllers = {
             const tokens = await tokenServices.getAllTokens()
             res.json(tokens)
         }catch(e){
-            console.log('Error:' + e)
-            res.status(500).json({error:e})
+            next(e)
         }
     }
 

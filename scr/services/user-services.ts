@@ -9,11 +9,11 @@ class UserServices{
     async findUser(name:String){
         const user = await User.findOne({name:name})
         const id = user?._id
-        const Token = new token({
-            user_id:id,
-            token:'asdsadasdasdasdsad'
-        })
-        Token.save()
+        // const Token = new token({
+        //     user_id:id,
+        //     token:'asdsadasdasdasdsad'
+        // })
+        // Token.save()
         return user
     }
 }
