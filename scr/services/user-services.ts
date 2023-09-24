@@ -1,5 +1,7 @@
 import { token } from "../db/models/token";
-import { User } from "../db/models/user";
+import { IUser, User } from "../db/models/user";
+import bcrypt from "bcrypt"
+import { ServiceException } from "../exceptions/service-exception";
 
 class UserServices{
     async getAllUsers(){
@@ -15,6 +17,17 @@ class UserServices{
         // })
         // Token.save()
         return user
+    }
+
+    async createUser(user: IUser){
+        const userTest = await User.findOne({name:name})
+        if(userTest?._id){throw new ServiceException(500, "User with this name already exist!!!")}
+        const password = this.createPassword(user.password)
+        const newUser = new User({...user})
+    }
+    async createPassword(pass:string){
+        const heshPass = bcrypt.hashSync(pass,10)
+        return heshPass
     }
 }
 
