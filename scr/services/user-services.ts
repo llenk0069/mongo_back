@@ -20,10 +20,12 @@ class UserServices{
     }
 
     async createUser(user: IUser){
-        const userTest = await User.findOne({name:name})
+        const userTest = await User.findOne({name:user.name})
         if(userTest?._id){throw new ServiceException(500, "User with this name already exist!!!")}
-        const password = this.createPassword(user.password)
-        const newUser = new User({...user})
+        const password = await this.createPassword(user.password)
+        const newUser = new User({...user, password})
+        newUser.save()
+        return newUser
     }
     async createPassword(pass:string){
         const heshPass = bcrypt.hashSync(pass,10)

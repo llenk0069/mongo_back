@@ -26,5 +26,4 @@ export interface IUser{
     age:number
     email?:string
 }
-
 export const User:Model<IUser> = mongoose.model('user', UserSchema)
