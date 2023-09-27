@@ -2,6 +2,7 @@ import { token } from "../db/models/token";
 import { IUser, User } from "../db/models/user";
 import bcrypt from "bcrypt"
 import { ServiceException } from "../exceptions/service-exception";
+import { Model } from "mongoose";
 
 class UserServices{
     async getAllUsers(){
@@ -10,12 +11,6 @@ class UserServices{
     }
     async findUser(name:String){
         const user = await User.findOne({name:name})
-        const id = user?._id
-        // const Token = new token({
-        //     user_id:id,
-        //     token:'asdsadasdasdasdsad'
-        // })
-        // Token.save()
         return user
     }
 
@@ -30,6 +25,14 @@ class UserServices{
     async createPassword(pass:string){
         const heshPass = bcrypt.hashSync(pass,10)
         return heshPass
+    }
+    async comparePass(pass:string, encrypted:string){
+        const res = await bcrypt.compareSync(pass, encrypted )
+        return res
+    }
+    userDTO(user:IUser){
+        const userDTO = {name:user.name, age:user.age, email:user.email}
+        return userDTO
     }
 }
 

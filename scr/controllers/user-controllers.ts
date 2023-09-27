@@ -45,10 +45,16 @@ export const UserControllers = {
     login: async (req:Request,res:Response, next:NextFunction)=>{
         const name:string = req.body.name
         const password:string = req.body.password
-        console.log(name)
         try{
             const user = await userServices.findUser(name)
             if(!user?._id){throw new ServiceException(500,'wrong name')}
+
+            const passCheck = await userServices.comparePass(password, user?.password)
+            if(!passCheck){throw new ServiceException(500,'wrong pass')}
+            
+            const userDTO = userServices.userDTO(user)
+            const tokens = await tokenServices.generateToken(userDTO)
+            console.log(tokens)
             // tokenServices.createToken(user?._id)
             res.status(200).send('Log in!')
         }catch(e){
