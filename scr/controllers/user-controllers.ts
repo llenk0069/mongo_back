@@ -45,6 +45,8 @@ export const UserControllers = {
     login: async (req:Request,res:Response, next:NextFunction)=>{
         const name:string = req.body.name
         const password:string = req.body.password
+        const {RefreshToken} = req.cookies
+        console.log(`Old Token: ${RefreshToken}`)
         try{
             const user = await userServices.findUser(name)
             if(!user?._id){throw new ServiceException(500,'wrong name')}
@@ -56,8 +58,11 @@ export const UserControllers = {
 
             const tokens = await tokenServices.generateToken(userDTO)
             if(!tokens){throw new ServiceException(500, "Token error")}
-        
-            // tokenServices.createToken(user?._id, tokens.refreshToken)
+
+            await(tokenServices.findRefreshToken(RefreshToken))
+            ? tokenServices.updateRefreshToken(RefreshToken, tokens.refreshToken)
+            : tokenServices.createToken(user?._id, tokens.refreshToken)
+
             res.cookie('RefreshToken', tokens?.refreshToken,{maxAge:24*7*60*60*1000, httpOnly: true, secure:true})
             res.status(200).json(tokens)
         }catch(e){

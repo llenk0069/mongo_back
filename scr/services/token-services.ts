@@ -8,9 +8,9 @@ const secret = process.env.SECRET as string
 class TokenServices{
     async getAllTokens(){
         const data = await token.find({})
-        console.log(data)
         return data
     }
+
     async createToken(user_id:ObjectId, RefreshToken:string){
         const Token = new token({
             user_id,
@@ -44,6 +44,20 @@ class TokenServices{
         const res = await token.findOne({token:refreshToken})
         console.log(res)
         return res
+    }
+
+    async findRefreshTokenByUserId(UserId:string){
+        const res = await token.find({user_id:UserId})
+        console.log(res)
+        return res
+    }
+
+    async updateRefreshToken(refreshToken:string, newRefreshToken:string){
+        const res = await token.findOne({token:refreshToken})
+        if(!res){return null}
+        const update = await token.findByIdAndUpdate(res._id, {token: newRefreshToken}, {new:true})
+        console.log(update)
+        return update
     }
 }
 export default new TokenServices()
