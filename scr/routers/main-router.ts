@@ -2,8 +2,10 @@ import TokensRouter from "./token-router";
 import UserRouter from "./user-router";
 import { json, NextFunction, Request, Response, Router } from "express";
 import { ServiceException } from "../exceptions/service-exception";
+import cookieParser from 'cookie-parser'
 
 const MainRouter = Router()
+MainRouter.use(cookieParser())
 MainRouter.use(json())
 
 MainRouter.use(UserRouter)

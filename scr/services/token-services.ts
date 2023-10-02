@@ -11,10 +11,10 @@ class TokenServices{
         console.log(data)
         return data
     }
-    async createToken(user_id:ObjectId){
+    async createToken(user_id:ObjectId, RefreshToken:string){
         const Token = new token({
             user_id,
-            token:"23_09_2023_test_2"
+            token:RefreshToken
         })
         Token.save()
     }
@@ -27,8 +27,23 @@ class TokenServices{
             return {accessToken, refreshToken}
         }catch(e){
             console.log(e)
+            return null
         }
+    }
 
+    async validateToken(token:string){
+        try{
+            return jwt.verify(token,secret)
+        }catch(e){
+            console.log(e)
+            return null
+        }
+    }
+
+    async findRefreshToken(refreshToken:string){
+        const res = await token.findOne({token:refreshToken})
+        console.log(res)
+        return res
     }
 }
 export default new TokenServices()

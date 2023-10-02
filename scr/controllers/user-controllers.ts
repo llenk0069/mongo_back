@@ -53,13 +53,16 @@ export const UserControllers = {
             if(!passCheck){throw new ServiceException(500,'wrong pass')}
             
             const userDTO = userServices.userDTO(user)
+
             const tokens = await tokenServices.generateToken(userDTO)
-            console.log(tokens)
-            // tokenServices.createToken(user?._id)
-            res.status(200).send('Log in!')
+            if(!tokens){throw new ServiceException(500, "Token error")}
+        
+            // tokenServices.createToken(user?._id, tokens.refreshToken)
+            res.cookie('RefreshToken', tokens?.refreshToken,{maxAge:24*7*60*60*1000, httpOnly: true, secure:true})
+            res.status(200).json(tokens)
         }catch(e){
             next(e)
         }
-    }
+    },
 
 }
