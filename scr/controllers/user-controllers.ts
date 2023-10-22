@@ -63,8 +63,8 @@ export const UserControllers = {
             ? tokenServices.updateRefreshToken(RefreshToken, tokens.refreshToken)
             : tokenServices.createToken(user?._id, tokens.refreshToken)
 
-            res.cookie('RefreshToken', tokens?.refreshToken,{maxAge:24*7*60*60*1000, httpOnly: true, secure:true})
-            res.status(200).json(tokens)
+            res.cookie('RefreshToken', tokens?.refreshToken,{maxAge:24*7*60*60*1000, httpOnly: true, secure:true, sameSite:'none'})
+            res.status(200).json({user, ...tokens})
         }catch(e){
             next(e)
         }
