@@ -33,7 +33,7 @@ export const TokenControllers = {
 
     refresh: async (req:Request,res:Response, next:NextFunction)=>{
         const {RefreshToken} = req.cookies
-        console.log(RefreshToken)
+        console.log('__Refresh_Cookie: ' + RefreshToken)
         try{
             const userData = await tokenServices.validateToken(RefreshToken)  as IUser
             const tokenTest = await tokenServices.findRefreshToken(RefreshToken)
@@ -43,7 +43,7 @@ export const TokenControllers = {
             const newTokens = await tokenServices.generateToken(userDTO)
             const update = await token.findByIdAndUpdate(tokenTest._id, {token: newTokens?.refreshToken}, {new:true})
             console.log(update)
-            res.cookie('RefreshToken', newTokens?.refreshToken,{maxAge:24*7*60*60*1000, httpOnly: true, secure:true})
+            res.cookie('RefreshToken', newTokens?.refreshToken,{maxAge:24*7*60*60*1000, httpOnly: true, secure:true, sameSite:'none'})
             res.status(200).json(newTokens)
         }catch(e){
             next(e)
