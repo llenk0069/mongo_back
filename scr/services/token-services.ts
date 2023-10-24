@@ -23,7 +23,7 @@ class TokenServices{
         try{
             console.log(secret)
             const  accessToken = jwt.sign(user, secret, { expiresIn: 5 * 60 })
-            const  refreshToken = jwt.sign(user, secret, { expiresIn: 60 * 60 })
+            const  refreshToken = jwt.sign(user, secret, { expiresIn:'30d' })
             return {accessToken, refreshToken}
         }catch(e){
             console.log(e)
